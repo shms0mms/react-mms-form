@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("reset.scss");
+* {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+body,
+html {
+	width: 100%;
+	height: 100%;
+}
+body {
+	padding: 120px;
+}
+input {
+	background-color: #fff;
+	border: 1px solid #000;
+	border-radius: 4px;
+	padding: 4px 12px;
+}
+
+button {
+	color: white;
+	border-radius: 4px;
+	padding: 6px 16px;
+	cursor: pointer;
+	display: block;
+	transition: all ease-in-out 0.3s;
+	&:hover {
+		background-color: purple;
+	}
+}
