@@ -20,7 +20,7 @@ export const useLocalStorage = () => {
 	const remove = (term: string) => {
 		localStorage.removeItem(term)
 	}
-	const set = async (term: string, elem: any) => {
+	const set = async (term: string, elem: unknown) => {
 		await localStorage.setItem(term, JSON.stringify(elem))
 	}
 	return { set, remove, get }

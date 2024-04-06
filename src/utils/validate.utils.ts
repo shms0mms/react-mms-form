@@ -1,63 +1,132 @@
-import {
-	FieldState,
-	FieldValues,
-	Mode,
-	RegisterParams,
-	ValidateFieldState,
-} from "../declarations/form"
-const validate = <FormData extends FieldValues>({
+import isValueShouldNotBeUndefined from "../scripts/isValueShouldNotBeUndefined"
+import { FieldState } from "../types/field"
+import { RegisterParams } from "../types/register"
+const validate = ({
 	params,
-	fieldState,
-	setFieldState,
 	field,
 }: {
 	params?: RegisterParams
-	fieldState: ValidateFieldState
-	setFieldState: (fieldState: ValidateFieldState) => void
-	mode?: Mode
 	field: FieldState
-}) => {
-	const changeFieldState = (isCorrect: boolean) => {
-		setFieldState({
-			isValid: [...fieldState.isValid, isCorrect],
-			isInvalid: [...fieldState.isInvalid, isCorrect],
-		})
-	}
+}): {
+	isInvalid: boolean
+	isValid: boolean
+	newField: FieldState
+} => {
 	if (params?.max) {
-		const isCorrect = field.value && +field.value > params.max ? false : true
-		changeFieldState(isCorrect)
+		const isCorrect =
+			isValueShouldNotBeUndefined(field.value) &&
+			+field.value > params.max.value
+				? false
+				: true
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+
+				newField: {
+					...field,
+					error: { message: params.max.message },
+				},
+			}
+		}
 	}
 	if (params?.min) {
-		const isCorrect = field.value && +field.value < params.min ? false : true
-		changeFieldState(isCorrect)
+		const isCorrect =
+			isValueShouldNotBeUndefined(field.value) &&
+			+field.value < params.min.value
+				? false
+				: true
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+
+				newField: {
+					...field,
+					error: { message: params.min.message },
+				},
+			}
+		}
 	}
 	if (params?.minLength) {
 		const isCorrect =
-			field.value && field.value.length < params.minLength ? false : true
-		changeFieldState(isCorrect)
+			isValueShouldNotBeUndefined(field.value) &&
+			field.value.length > 0 &&
+			field.value.length < params.minLength.value
+				? false
+				: true
+
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+				newField: {
+					...field,
+					error: { message: params.minLength.message },
+				},
+			}
+		}
 	}
 	if (params?.maxLength) {
 		const isCorrect =
-			field.value && field.value.length > params.maxLength ? false : true
-		changeFieldState(isCorrect)
+			isValueShouldNotBeUndefined(field.value) &&
+			field.value.length > params.maxLength.value
+				? false
+				: true
+
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+				newField: {
+					...field,
+					error: { message: params.maxLength.message },
+				},
+			}
+		}
 	}
 	if (params?.required) {
-		const isCorrect = field.value && field.value.length > 0 ? true : false
-		changeFieldState(isCorrect)
+		const isCorrect =
+			isValueShouldNotBeUndefined(field.value) && field.value.length > 0
+				? true
+				: false
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+				newField: {
+					...field,
+					error: {
+						message: params.required.message,
+					},
+				},
+			}
+		}
 	}
 	if (params?.regex) {
-		const isCorrect = params.regex.match(field.value ? field.value : "")
+		const isCorrect = params.regex.value.match(
+			isValueShouldNotBeUndefined(field.value) ? field.value : ""
+		)
 			? true
 			: false
-		changeFieldState(isCorrect)
-	}
-	const values = {
-		isValid: fieldState.isInvalid.some(i => i === true) ? false : true,
-		isInvalid: fieldState.isValid.some(i => i === true) ? false : true,
+		if (isCorrect === false) {
+			return {
+				isInvalid: true,
+				isValid: false,
+				newField: {
+					...field,
+					error: {
+						message: params.regex.message,
+					},
+				},
+			}
+		}
 	}
 
 	return {
-		...values,
+		isInvalid: false,
+		isValid: true,
+		newField: { ...field, isValid: true, isInvalid: false },
 	}
 }
 

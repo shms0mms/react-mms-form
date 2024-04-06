@@ -1,14 +1,14 @@
-// vite.config.ts
-import react from "@vitejs/plugin-react"
-import { resolve } from "path"
-export default {
-	plugins: [react()],
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react-swc"
+import dts from "vite-plugin-dts"
+import path from "path"
 
+export default defineConfig({
 	build: {
 		lib: {
-			entry: resolve(__dirname, "src/index.ts"),
-			name: "ReactMmsForm",
-			fileName: "react-mms-form",
+			entry: path.resolve(__dirname, "./src/index.ts"),
+			name: "react-mms-form",
+			fileName: format => `index.${format}.js`,
 		},
 		rollupOptions: {
 			external: ["react", "react-dom"],
@@ -19,5 +19,8 @@ export default {
 				},
 			},
 		},
+		sourcemap: true,
+		emptyOutDir: true,
 	},
-}
+	plugins: [react(), dts()],
+})

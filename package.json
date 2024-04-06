@@ -1,29 +1,52 @@
 {
-	"name": "react-mms-form",
+	"name": "react-mmmmmm-form",
 	"version": "1.0.0",
-	"type": "commonjs",
-	"module": "./dist/react-mms-form.js",
-	"main": "./dist/react-mms-form.umd.cjs",
+	"type": "module",
+	"main": "./dist/index.umd.js",
+	"module": "./dist/index.es.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/react-mms-form.js",
-			"require": "./dist/react-mms-form.umd.cjs"
+			"import": "./dist/index.es.js",
+			"require": "./dist/index.umd.js",
+			"types": "./dist/index.d.ts"
 		}
 	},
+	"files": [
+		"dist"
+	],
+	"license": "ISC",
+	"keywords": [
+		"react",
+		"react-form",
+		"react-mms-form",
+		"react-hook-form",
+		"react-typescript",
+		"useForm",
+		"Beautiful UI fields",
+		"typescript"
+	],
+	"author": "Kirill Toropov",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@babel/core": "^7.22.19",
+		"@babel/preset-env": "^7.22.15",
+		"@babel/preset-typescript": "^7.22.15",
+		"@typescript-eslint/eslint-plugin": "^6.7.0",
+		"@typescript-eslint/parser": "^6.7.0",
+		"@vitejs/plugin-react-swc": "^3.6.0",
+		"eslint": "^8.49.0",
 		"js-cookie": "^3.0.5",
 		"path": "^0.12.7",
+		"random-words": "^2.0.1",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"vite-plugin-dts": "^3.8.1"
 	},
-	"files": [
-		"dist"
-	],
 	"devDependencies": {
 		"@types/js-cookie": "^3.0.6",
 		"@types/node": "^20.11.17",
@@ -34,7 +57,7 @@
 		"postcss": "^8.4.35",
 		"sass": "^1.70.0",
 		"tailwindcss": "^3.4.1",
-		"typescript": "^5.2.2",
+		"typescript": "^5.3.3",
 		"vite": "^5.1.0"
 	}
 }
