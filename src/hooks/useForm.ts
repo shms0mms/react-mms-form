@@ -12,6 +12,42 @@ import {
 import createFormControl from "../utils/createFormControl.utils"
 import { VALIDATION_MODE_ON_CHANGE } from "../const/const"
 
+/**
+ * Custom hook to manage the entire form.
+ *
+ * @param props - form configuration and validation parameters.
+ *
+ * @returns methods - handleSubmit, register ... {@link UseFormReturn}
+ *
+ * @example
+ * ```tsx
+ * interface FormData {
+ * 	exampleRequired: string
+ * 	example: string
+ * }
+ * function App() {
+ *   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+ *   		defaultValues: {
+ * 			"example": "test text"
+ * 		},
+ * 		mode: "onChange"
+ *   });
+ *   const onSubmitHandler: OnSubmitHandler<FormData> = data => console.log(data);
+ *
+ *
+ *
+ *   return (
+ *     <form onSubmit={(e) => handleSubmit(e, onSubmitHandler)}>
+ *       <input {...register("example")} />
+ *       <input {...register("exampleRequired", { required: true })} />
+ *       {errors.exampleRequired && <span>This field is required</span>}
+ *       <button>Submit</button>
+ *     </form>
+ *   );
+ * }
+ * ```
+ */
+
 export const useForm = <FormData extends FieldsValues = object>(
 	props?: FormProps<FormData>
 ): UseFormReturn<FormData> => {

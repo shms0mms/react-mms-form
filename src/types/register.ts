@@ -4,6 +4,7 @@ export type RegisterParam<T> = {
 	message?: string
 	value: T
 }
+
 export type UseRegisterReturn = object
 export type Register<FormData extends FieldsValues = object> = (
 	name: keyof FormData,
@@ -15,6 +16,6 @@ export type RegisterParams = Partial<{
 	maxLength: RegisterParam<number>
 	min: RegisterParam<number>
 	max: RegisterParam<number>
-	regex: RegisterParam<string>
+	regex: RegisterParam<RegExp>
 	lockOn: RegisterParam<boolean>
 }>

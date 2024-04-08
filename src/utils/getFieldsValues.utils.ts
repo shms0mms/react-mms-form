@@ -1,20 +1,23 @@
 import { Fields, FieldsValues } from "../types/form"
 import { ArrayRecord } from "../types/types"
 
-const getFieldsValues = <FormData extends FieldsValues = {}>(
-	names: ArrayRecord<FormData>,
+const getFieldsValues = <FormData extends FieldsValues = object>(
+	names: ArrayRecord<FormData> | undefined,
 	_fields: Fields<FormData>
 ): FormData => {
 	const values: Record<keyof FormData, string> = {} as Record<
 		keyof FormData,
 		string
 	>
+
 	if (names && names.length) {
 		for (let i = 0; i < names.length; i++) {
 			const name = names[i]
-			const fs = (_fields as Fields<FormData>)[name].value
-			if (fs) {
-				values[name] = fs
+			if (Object.keys(_fields).length) {
+				const fs = (_fields as Fields<FormData>)[name].value
+				if (fs) {
+					values[name] = fs
+				}
 			}
 		}
 		return values as FormData

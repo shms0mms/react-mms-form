@@ -1,5 +1,5 @@
 {
-	"name": "react-mmmmmm-form",
+	"name": "react-mms-form",
 	"version": "1.0.0",
 	"type": "module",
 	"main": "./dist/index.umd.js",
@@ -15,6 +15,10 @@
 	"files": [
 		"dist"
 	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shms0mms/react-mms-form.git"
+	},
 	"license": "ISC",
 	"keywords": [
 		"react",
@@ -30,7 +34,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"docs": "jsdoc2md --template ./README.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
 	},
 	"dependencies": {
 		"@babel/core": "^7.22.19",
@@ -47,6 +52,7 @@
 		"react-dom": "^18.2.0",
 		"vite-plugin-dts": "^3.8.1"
 	},
+	"homepage": "https://github.com/shms0mms/react-mms-form#readme",
 	"devDependencies": {
 		"@types/js-cookie": "^3.0.6",
 		"@types/node": "^20.11.17",
@@ -54,6 +60,8 @@
 		"@types/react-dom": "^18.2.19",
 		"@vitejs/plugin-react": "^4.2.1",
 		"autoprefixer": "^10.4.17",
+		"jsdoc-babel": "^0.5.0",
+		"jsdoc-to-markdown": "^8.0.0",
 		"postcss": "^8.4.35",
 		"sass": "^1.70.0",
 		"tailwindcss": "^3.4.1",

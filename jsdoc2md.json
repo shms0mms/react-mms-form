@@ -1,0 +1,10 @@
+{
+	"source": {
+		"includePattern": "./src/[a-z][A-Z].ts"
+	},
+	"plugins": ["/node_modules/jsdoc-babel"],
+	"babel": {
+		"extensions": ["ts", "tsx"],
+		"presets": ["@babel/preset-typescript"]
+	}
+}

@@ -2,7 +2,7 @@ import { FieldState } from "../types/field"
 import { Fields, FieldsValues } from "../types/form"
 import { ArrayRecord } from "../types/types"
 
-const getFields = <FormData extends FieldsValues = {}>(
+const getFields = <FormData extends FieldsValues = object>(
 	names: ArrayRecord<FormData>,
 	_fields: Fields<FormData>
 ): Fields<FormData> => {

@@ -1,6 +1,8 @@
 import { FieldsValues, UIFormProps } from "../types/form"
 
-const Form = <T extends FieldsValues = {}>(props: UIFormProps<T>) => {
+export const Form = <T extends FieldsValues = object>(
+	props: UIFormProps<T>
+) => {
 	const { handleSubmit, onSubmitHandler, children, ..._props } = props
 
 	return (
@@ -12,5 +14,3 @@ const Form = <T extends FieldsValues = {}>(props: UIFormProps<T>) => {
 		</form>
 	)
 }
-
-export default Form

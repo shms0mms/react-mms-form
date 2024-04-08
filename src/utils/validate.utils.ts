@@ -1,3 +1,4 @@
+import hasFieldValue from "@/scripts/hasFieldValue"
 import isValueShouldNotBeUndefined from "../scripts/isValueShouldNotBeUndefined"
 import { FieldState } from "../types/field"
 import { RegisterParams } from "../types/register"
@@ -50,9 +51,9 @@ const validate = ({
 	}
 	if (params?.minLength) {
 		const isCorrect =
-			isValueShouldNotBeUndefined(field.value) &&
-			field.value.length > 0 &&
-			field.value.length < params.minLength.value
+			field.value === undefined ||
+			(hasFieldValue(field.value) &&
+				field.value.length < params.minLength.value)
 				? false
 				: true
 
@@ -104,11 +105,12 @@ const validate = ({
 		}
 	}
 	if (params?.regex) {
-		const isCorrect = params.regex.value.match(
+		const isCorrect = params.regex.value.test(
 			isValueShouldNotBeUndefined(field.value) ? field.value : ""
 		)
 			? true
 			: false
+
 		if (isCorrect === false) {
 			return {
 				isInvalid: true,

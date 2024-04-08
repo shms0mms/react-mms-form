@@ -1,9 +1,14 @@
+import { VALIDATION_MODE_ON_SUBMIT } from "./../const/const"
 import { FormEvent } from "react"
 
 import getFieldsLogic from "./getFields.utils"
 import getFieldsValuesLogic from "./getFieldsValues.utils"
 import getDefaultField from "./getDefaultField.utils"
-import { VALIDATION_MODE_ON_CHANGE } from "../const/const"
+import {
+	VALIDATION_MODE_ON_BLUR,
+	VALIDATION_MODE_ON_CHANGE,
+	VALIDATION_MODE_ON_FOCUS,
+} from "../const/const"
 import validate from "./validate.utils"
 import { RegisterParams } from "../types/register"
 import {
@@ -18,6 +23,7 @@ import set from "../scripts/set"
 import get from "../scripts/get"
 import isNullOrUndefined from "../scripts/isNullOrUndefined"
 import saveToStorage from "./saveToStorage.utils"
+import isFieldsProperty from "@/scripts/isFieldsProperty"
 const createFormControl = <FormData extends FieldsValues = object>(
 	props: CreateFormControlProps<FormData>
 ): { control: UseFormControlReturn<FormData> } => {
@@ -42,7 +48,7 @@ const createFormControl = <FormData extends FieldsValues = object>(
 				isValid: false,
 				isInvalid: true,
 			}))
-		} else if (isValid && formState.isInvalid) {
+		} else if (isValid && isFieldsProperty(formState.errors, undefined)) {
 			updateFormState(state => ({
 				...state,
 				isValid: true,
@@ -83,15 +89,22 @@ const createFormControl = <FormData extends FieldsValues = object>(
 			isValidating: false,
 		}))
 	}
-	const handleSubmit = (e: FormEvent, fn: OnSubmitHandler<FormData>) => {
+	const handleSubmit = async (e: FormEvent, fn: OnSubmitHandler<FormData>) => {
 		updateFormState(state => ({
 			...state,
 			isLoading: true,
 		}))
 		let names: ArrayRecord<FormData> = [] as ArrayRecord<FormData>
 		formValidate()
+		if (withStorageMode === VALIDATION_MODE_ON_SUBMIT) {
+			for (let key in fields)
+				saveToStorage(key, (fields as Fields<FormData>)[key].value as never, {
+					withCookies,
+					withLocalStorage,
+				})
+		}
 		for (let key in fields) names && names.push(key)
-		fn({ ...getFieldsValuesLogic(names, _fields) })
+		if (formState.isValid) await fn({ ...getFieldsValuesLogic(names, _fields) })
 
 		updateFormState(state => ({
 			...state,
@@ -116,6 +129,26 @@ const createFormControl = <FormData extends FieldsValues = object>(
 
 			set<Fields<FormData>>(_fields, name, _field)
 			updateFields(prev => ({ ...prev, ..._fields }))
+		}
+		const validateOnField = () => {
+			const { isInvalid, isValid, newField } = validate({
+				field: _fields[name],
+				params,
+			})
+			set<Fields<FormData>>(_fields, name, newField)
+			updateFields(prev => ({ ...prev, ..._fields }))
+			updateValidate(isInvalid, isValid)
+			if (isInvalid) {
+				updateFormState(state => ({
+					...state,
+					errors: { ...state.errors, [name]: newField.error?.message },
+				}))
+			} else {
+				updateFormState(state => ({
+					...state,
+					errors: { ...state.errors, [name]: undefined },
+				}))
+			}
 		}
 		const onChange = (e: OnChange<HTMLInputElement>) => {
 			const value = e.target.value
@@ -149,26 +182,43 @@ const createFormControl = <FormData extends FieldsValues = object>(
 				}
 			}
 			if (mode === VALIDATION_MODE_ON_CHANGE) {
-				const { isInvalid, isValid, newField } = validate({
-					field: _fields[name],
-					params,
-				})
-				set<Fields<FormData>>(_fields, name, newField)
-				updateFields(prev => ({ ...prev, ..._fields }))
-				updateValidate(isInvalid, isValid)
-				if (isInvalid) {
-					updateFormState(state => ({
-						...state,
-						errors: { ...state.errors, [name]: newField.error?.message },
-					}))
-				} else {
-					updateFormState(state => ({
-						...state,
-						errors: { ...state.errors, [name]: undefined },
-					}))
-				}
+				validateOnField()
 			}
 			if (withStorageMode === VALIDATION_MODE_ON_CHANGE) {
+				saveToStorage(name, value as never, {
+					withCookies,
+					withLocalStorage,
+				})
+			}
+		}
+		const onBlur = () => {
+			if (mode === VALIDATION_MODE_ON_BLUR) {
+				validateOnField()
+			}
+			if (withStorageMode === VALIDATION_MODE_ON_BLUR) {
+				saveToStorage(name, value as never, {
+					withCookies,
+					withLocalStorage,
+				})
+			}
+			const field = get<Fields<FormData>>(_fields, name)
+			field.isFocus = false
+			set<Fields<FormData>>(_fields, name, field)
+			updateFields(prev => ({ ...prev, ..._fields }))
+		}
+		const onFocus = () => {
+			if (!formState.isTouched)
+				updateFormState(state => ({ ...state, isTouched: true }))
+			const field = get<Fields<FormData>>(_fields, name)
+			field.isTouched = true
+			field.isFocus = true
+			set<Fields<FormData>>(_fields, name, field)
+			updateFields(prev => ({ ...prev, ..._fields }))
+
+			if (mode === VALIDATION_MODE_ON_FOCUS) {
+				validateOnField()
+			}
+			if (withStorageMode === VALIDATION_MODE_ON_FOCUS) {
 				saveToStorage(name, value as never, {
 					withCookies,
 					withLocalStorage,
@@ -180,13 +230,16 @@ const createFormControl = <FormData extends FieldsValues = object>(
 			value,
 			name,
 			onChange,
+			onFocus,
+			onBlur,
 		}
 	}
 	const control: UseFormControlReturn<FormData> = {
 		register,
 		handleSubmit,
-		getFields: (names: ArrayRecord<FormData>) => getFieldsLogic(names, _fields),
-		getFieldsValues: (names: ArrayRecord<FormData>) =>
+		getFields: (names?: ArrayRecord<FormData>) =>
+			getFieldsLogic(names, _fields),
+		getFieldsValues: (names?: ArrayRecord<FormData>) =>
 			getFieldsValuesLogic(names, _fields),
 		formState,
 		fields: fields as Fields<FormData>,

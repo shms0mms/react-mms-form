@@ -8,4 +8,4 @@ export type HandleSubmit<FormData extends FieldsValues = object> = (
 
 export type OnSubmitHandler<FormData extends FieldsValues = object> = (
 	data: Record<keyof FormData, string>
-) => void
+) => Promise<void> | void

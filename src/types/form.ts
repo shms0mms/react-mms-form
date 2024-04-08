@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { FormHTMLAttributes, ReactNode } from "react"
 import { FieldState } from "./field"
 import { Register, RegisterParams } from "./register"
 import { HandleSubmit, OnSubmitHandler } from "./submit"
@@ -17,7 +17,7 @@ export type UIFormProps<FormData extends FieldsValues = object> = {
 	children?: ReactNode
 	handleSubmit: HandleSubmit<FormData>
 	onSubmitHandler: OnSubmitHandler<FormData>
-} & Omit<HTMLFormElement, "onSubmit">
+} & Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit">
 export type DefaultValues<FormData extends FieldsValues = object> = {
 	[P in keyof FormData]?: string
 }
@@ -48,10 +48,10 @@ export type WithStorage<FormData extends FieldsValues = object> = {
 	defaultValues?: DefaultValues<FormData>
 }
 export type GetFields<FormData extends FieldsValues = object> = (
-	names: ArrayRecord<FormData>
+	names?: ArrayRecord<FormData>
 ) => Fields<FormData>
 export type GetFieldsValues<FormData extends FieldsValues = object> = (
-	names: ArrayRecord<FormData>
+	names?: ArrayRecord<FormData>
 ) => FormData
 export interface UseFormReturn<FormData extends FieldsValues = object>
 	extends UseFormControlReturn<FormData> {
