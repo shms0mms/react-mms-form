@@ -14,8 +14,9 @@ const Form: FC = () => {
 
 		// Here you can pass it to a function which in turn will make a request to the backend
 	}
+
 	console.log(getFieldsValues(["description"]))
-	console.log(getFields(["name", "description"]))
+	console.log(getFields([]))
 
 	return (
 		<>

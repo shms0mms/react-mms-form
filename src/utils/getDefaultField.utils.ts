@@ -2,7 +2,7 @@ import { FieldState } from "../types/field"
 import { FieldsValues, WithStorage } from "../types/form"
 import { RegisterParams } from "../types/register"
 import getFromStorage from "./getFromStorage.utils"
-const getDefaultField = <FormData extends FieldsValues = {}>(
+const getDefaultField = <FormData extends FieldsValues = object>(
 	name: keyof FormData,
 	objects: WithStorage<FormData> & { params?: RegisterParams }
 ) => {

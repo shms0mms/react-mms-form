@@ -1,5 +1,5 @@
 {
-	"name": "react-mms-form",
+	"name": "react-pcp-form",
 	"version": "1.0.0",
 	"type": "module",
 	"main": "./dist/index.umd.js",

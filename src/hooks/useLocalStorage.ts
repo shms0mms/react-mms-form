@@ -10,18 +10,21 @@ const parseJSONstring = (parceString: string) => {
 
 export const useLocalStorage = () => {
 	const get = (term: string) => {
-		const response = JSON.parse(
-			JSON.stringify(localStorage.getItem(term) || "")
-		)
+		if (typeof window !== "undefined") {
+			const response = JSON.parse(
+				JSON.stringify(localStorage.getItem(term) || "")
+			)
 
-		if (typeof response === "string") return parseJSONstring(response)
-		return response
+			if (typeof response === "string") return parseJSONstring(response)
+			return response
+		}
 	}
 	const remove = (term: string) => {
-		localStorage.removeItem(term)
+		if (typeof window !== "undefined") localStorage.removeItem(term)
 	}
 	const set = async (term: string, elem: unknown) => {
-		await localStorage.setItem(term, JSON.stringify(elem))
+		if (typeof window !== "undefined")
+			await localStorage.setItem(term, JSON.stringify(elem))
 	}
 	return { set, remove, get }
 }

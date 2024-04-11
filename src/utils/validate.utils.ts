@@ -26,6 +26,8 @@ const validate = ({
 
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: { message: params.max.message },
 				},
 			}
@@ -44,6 +46,8 @@ const validate = ({
 
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: { message: params.min.message },
 				},
 			}
@@ -63,6 +67,8 @@ const validate = ({
 				isValid: false,
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: { message: params.minLength.message },
 				},
 			}
@@ -81,6 +87,8 @@ const validate = ({
 				isValid: false,
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: { message: params.maxLength.message },
 				},
 			}
@@ -97,6 +105,8 @@ const validate = ({
 				isValid: false,
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: {
 						message: params.required.message,
 					},
@@ -117,6 +127,8 @@ const validate = ({
 				isValid: false,
 				newField: {
 					...field,
+					isInvalid: true,
+					isValid: false,
 					error: {
 						message: params.regex.message,
 					},

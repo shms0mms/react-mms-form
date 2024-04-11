@@ -57,6 +57,11 @@ export interface UseFormReturn<FormData extends FieldsValues = object>
 	extends UseFormControlReturn<FormData> {
 	control: UseFormControlReturn<FormData>
 }
+export type UpdateField<FormData extends FieldsValues = object> = (
+	name: keyof FormData,
+	data: FieldState
+) => void
+export type UpdateFormState = (state: unknown) => void
 export interface CreateFormControlProps<FormData extends FieldsValues = object>
 	extends FormProps<FormData> {
 	fields: Fields<FormData> | object
@@ -72,4 +77,5 @@ export type UseFormControlReturn<FormData extends FieldsValues = object> = {
 	formState: FormState<FormData>
 	fields: Fields<FormData>
 	fieldsValues: FormData
+	updateField: UpdateField<FormData>
 }

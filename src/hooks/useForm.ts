@@ -62,6 +62,7 @@ export const useForm = <FormData extends FieldsValues = object>(
 	})
 
 	const [fields, updateFields] = useState<Fields<FormData> | object>({})
+
 	const _props: CreateFormControlProps<FormData> = {
 		...props,
 		mode: props?.mode || VALIDATION_MODE_ON_CHANGE,

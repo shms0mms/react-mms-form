@@ -2,28 +2,27 @@ import { FC } from "react"
 import { Form as ReactForm } from "@/components/Form"
 import { useForm } from "@/hooks/useForm"
 import { OnSubmitHandler } from "@/types/submit"
+import ButtonChangeValue from "./ButtonChangeValue"
 interface RegisterData {
-	name: string
 	password: string
-	login: string
 	email: string
+	name: string
+	login: string
 }
 
 const Register: FC = () => {
-	const {
-		handleSubmit,
-		register,
-		formState: { errors, isLoading },
-	} = useForm<RegisterData>({
-		mode: "onSubmit",
-		withLocalStorage: ["name", "login", "email", "password"],
-		withStorageMode: "onSubmit",
-	})
+	const { handleSubmit, register, formState, fields, getFields, updateField } =
+		useForm<RegisterData>({
+			mode: "onSubmit",
+			withLocalStorage: ["email", "password"],
+			withStorageMode: "onChange",
+		})
 	const onSubmitHandler: OnSubmitHandler<RegisterData> = async data => {
 		console.log(data)
 
 		// Here you can pass it to a function which in turn will make a request to the backend
 	}
+	console.log(fields)
 
 	// Checking email on valid
 	const EMAIL_REGEXP =
@@ -32,7 +31,10 @@ const Register: FC = () => {
 	return (
 		<ReactForm handleSubmit={handleSubmit} onSubmitHandler={onSubmitHandler}>
 			<div className="flex flex-col gap-2">
-				<input placeholder="Ваше имя" type="text" {...register("name")} />
+				<ButtonChangeValue
+					updateField={updateField}
+					field={getFields(["password"]).password}
+				/>
 				<input
 					placeholder="Ваш пароль"
 					type="password"
@@ -43,7 +45,7 @@ const Register: FC = () => {
 						},
 					})}
 				/>
-				<div style={{ color: "red" }}>{errors.password}</div>
+				<div style={{ color: "red" }}>{formState.errors.password}</div>
 				<input
 					placeholder="Ваш Email"
 					type="text"
@@ -54,10 +56,8 @@ const Register: FC = () => {
 						},
 					})}
 				/>
-				<div style={{ color: "red" }}>{errors.email}</div>
-				<input placeholder="Ваш логин" type="text" {...register("login")} />
-
-				<button disabled={isLoading} className="btn" type="submit">
+				<div style={{ color: "red" }}>{formState.errors.email}</div>
+				<button disabled={formState.isLoading} className="btn" type="submit">
 					Submit
 				</button>
 			</div>
